@@ -7,30 +7,30 @@ import pickle
 import numpy as np
 
 # Load data.
-with open('X_train_encoded', 'rb') as f:
+with open('vectors/X_train_encoded', 'rb') as f:
     X_train = np.asarray(pickle.load(f))
-with open('X_test_encoded', 'rb') as f:
+with open('vectors/X_test_encoded', 'rb') as f:
     X_test = np.asarray(pickle.load(f))
-with open('y_train', 'rb') as f:
+with open('vectors/y_train', 'rb') as f:
     y_train = np.asarray(pickle.load(f))
-with open('y_test', 'rb') as f:
+with open('vectors/y_test', 'rb') as f:
     y_test = np.asarray(pickle.load(f))
 
 from tensorflow.keras.utils import to_categorical
 y_train = to_categorical(y_train)
 y_test  = to_categorical(y_test)
 
-X_train = keras.preprocessing.sequence.pad_sequences(X_train, value=47030, padding='post', maxlen=62, truncating='post')
-X_test  = keras.preprocessing.sequence.pad_sequences(X_test,  value=47030, padding='post', maxlen=62, truncating='post')
+X_train = keras.preprocessing.sequence.pad_sequences(X_train, value=38517, padding='post', maxlen=62, truncating='post')
+X_test  = keras.preprocessing.sequence.pad_sequences(X_test,  value=38517, padding='post', maxlen=62, truncating='post')
 print(X_train.shape)
 print(y_train.shape)
-num_words = 47031
+num_words = 38518
 
 model = models.Sequential()
-model.add(Embedding(num_words, 20, input_length=62))
+model.add(Embedding(num_words, 5, input_length=62))
 model.add(GlobalAveragePooling1D())
-model.add(Dense(75, activation='relu'))
-model.add(Dropout(0.3))
+model.add(Dense(50, activation='relu'))
+model.add(Dropout(0.5))
 model.add(Dense(2, activation='softmax'))
 #opt = tf.keras.optimizers.Adam(0.0001)
 

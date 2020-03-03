@@ -9,7 +9,6 @@ with open('OnionOrNot.csv', 'r') as f:
 # Prepare X, y data
 X_data = []
 y_data = []
-i=1
 for d in data:
     x = d.strip()[:-2]
     y = int(d.strip()[-1])
@@ -26,19 +25,22 @@ with open('y_test', 'wb') as f:
 
 unique_words = []
 for x in X_train:
-    unique_words.extend(x.split())
+    unique_words.extend([i.lower() for i in x.split()])
+    #unique_words.extend(x.split())
 
 # Remove duplicates
 unique_words = list(set(unique_words))
+with open('vocabulary', 'wb') as f:
+    pickle.dump(unique_words, f)
 num_words = len(unique_words)
-print(num_words)
+print("Vocabulary Length: {}".format(num_words))
 
 # Encode strings as integers
 X_train_encoded = []
 for x in tqdm(X_train):
     headline = []
     for word in x.split():
-        headline.append(unique_words.index(word))
+        headline.append(unique_words.index(word.lower()))
     headline = np.asarray(headline)
     X_train_encoded.append(headline)
 OOV = num_words
@@ -47,9 +49,9 @@ for x in tqdm(X_test):
     headline = []
     for word in x.split():
         try:
-            headline.append(unique_words.index(word))
+            headline.append(unique_words.index(word.lower()))
         except ValueError:
-            headline.append(47029)
+            headline.append(38516)
             OOV += 1
     headline = np.asarray(headline)
     X_test_encoded.append(headline)
